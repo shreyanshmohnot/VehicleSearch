@@ -1,15 +1,19 @@
 package com.shreymohnot.vehiclesearch;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.Button;
@@ -17,11 +21,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 101;
     Button sendBtn;
     EditText txtRegN;
     String phoneNo;
     String message;
-    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,54 +40,25 @@ public class MainActivity extends Activity {
                 if (txtRegN.getText().toString().trim().length() >= 5)
                     checkMessage();
                 else {
-                    txtRegN.requestFocus();
                     Toast.makeText(getApplicationContext(), "Please Enter Valid Number", Toast.LENGTH_LONG).show();
+                    txtRegN.requestFocus();
                 }
             }
         });
     }
 
     protected void checkMessage() {
-        progress = new ProgressDialog(MainActivity.this);
-        progress.setMax(100);
-        progress.setMessage("Sending SMS...");
-        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.show();
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                try {
-                    sendSMSMessage();
-                    Thread.sleep(400);
-                    if (progress.isShowing()) {
-                        progress.dismiss();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
+            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
+                return;
+            } else {
+                sendSMSMessage();
             }
-        }.start();
-    }
-
-    public void onBackPressed() {
-        final AlertDialog.Builder aobj = new AlertDialog.Builder(MainActivity.this);
-        aobj.setTitle("Exit");
-        aobj.setMessage("Are you sure?");
-        aobj.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
-        aobj.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog alertDialog = aobj.create();
-        alertDialog.show();
+        } else {
+            sendSMSMessage();
+        }
     }
 
     protected void sendSMSMessage() {
@@ -93,8 +68,16 @@ public class MainActivity extends Activity {
 
         String SMS_SENT = "SMS_SENT";
         String SMS_DELIVERED = "SMS_DELIVERED";
+
         PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SMS_SENT), 0);
         PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SMS_DELIVERED), 0);
+
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNo, null, message, sentPendingIntent, deliveredPendingIntent);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         // For when the SMS has been sent
         registerReceiver(new BroadcastReceiver() {
@@ -131,10 +114,39 @@ public class MainActivity extends Activity {
                 }
             }
         }, new IntentFilter(SMS_DELIVERED));
+    }
 
-        // Get the default instance of SmsManager
-        SmsManager smsManager = SmsManager.getDefault();
-        // Send a text based SMS
-        smsManager.sendTextMessage(phoneNo, null, message, sentPendingIntent, deliveredPendingIntent);
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_SEND_SMS:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    sendSMSMessage();
+                } else {
+                    Toast.makeText(this, "SMS Denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    public void onBackPressed() {
+        final AlertDialog.Builder aobj = new AlertDialog.Builder(MainActivity.this);
+        aobj.setTitle("Exit");
+        aobj.setMessage("Are you sure?");
+        aobj.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        aobj.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = aobj.create();
+        alertDialog.show();
     }
 }
