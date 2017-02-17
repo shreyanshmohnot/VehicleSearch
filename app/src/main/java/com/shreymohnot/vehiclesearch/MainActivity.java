@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,7 +32,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
         sendBtn = (Button) findViewById(R.id.btnSend);
         txtRegN = (EditText) findViewById(R.id.txtRegN);
 
@@ -72,6 +73,21 @@ public class MainActivity extends Activity {
         PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SMS_SENT), 0);
         PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SMS_DELIVERED), 0);
 
+        final ProgressDialog progressBar = new ProgressDialog(this);
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressBar.setMessage("Sending SMS");
+        progressBar.show();
+
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(400);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
         try {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNo, null, message, sentPendingIntent, deliveredPendingIntent);
@@ -83,6 +99,7 @@ public class MainActivity extends Activity {
         registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                progressBar.dismiss();
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
                         Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_SHORT).show();
@@ -104,9 +121,11 @@ public class MainActivity extends Activity {
         registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                progressBar.dismiss();
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
                         Toast.makeText(getBaseContext(), "SMS delivered", Toast.LENGTH_SHORT).show();
+                        txtRegN.setText("");
                         break;
                     case Activity.RESULT_CANCELED:
                         Toast.makeText(getBaseContext(), "SMS not delivered", Toast.LENGTH_SHORT).show();
