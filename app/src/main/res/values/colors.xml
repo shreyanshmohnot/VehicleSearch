@@ -6,4 +6,5 @@
     <color name="bgcolor">#FFFFFF</color>
     <color name="txthint">#B0BEC5</color>
     <color name="txtcolor">#1A237E</color>
+    <color name="btndisabled">#7F89E5</color>
 </resources>
