@@ -19,7 +19,8 @@ public class HelpActivity extends AppCompatActivity {
             Tracker t = ((GAnalytics) getApplication()).getDefaultTracker();
             t.setScreenName(this.getClass().getSimpleName());
             t.send(new HitBuilders.ScreenViewBuilder().build());
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         ActionBar actionBar = getSupportActionBar();

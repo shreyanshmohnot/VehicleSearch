@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     EditText txtRegN;
     String phoneNo;
     String message;
+    String excptn;
     ProgressDialog pBar;
     private final BroadcastReceiver smsReceiver = new BroadcastReceiver() {
         @Override
@@ -72,13 +74,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+    Tracker t;
 
     @Override
     protected void onStart() {
         try {
             registerReceiver(smsReceiver, new IntentFilter(SMS_SENT));
             registerReceiver(smsReceiver, new IntentFilter(SMS_DELIVERED));
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         super.onStart();
     }
@@ -88,17 +92,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         try {
-            Tracker t = ((GAnalytics) getApplication()).getDefaultTracker();
+            t = ((GAnalytics) getApplication()).getDefaultTracker();
             t.setScreenName(this.getClass().getSimpleName());
             t.send(new HitBuilders.ScreenViewBuilder().build());
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+
         pBar = new ProgressDialog(MainActivity.this) {
             @Override
             public void onBackPressed() {
                 pBar.dismiss();
             }
         };
+
         pBar.setMessage("Sending SMS");
         pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pBar.setIndeterminate(true);
@@ -109,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (txtRegN.getText().toString().replaceAll(" ", "").trim().length() >= 5) {
-                    checkMessage();
+                    checkSimExist();
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Please Enter Valid Number", Toast.LENGTH_LONG).show();
@@ -135,6 +142,15 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void checkSimExist() {
+        TelephonyManager telMgr = (TelephonyManager) getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+        if (telMgr.getSimState() != TelephonyManager.SIM_STATE_ABSENT) {
+            checkMessage();
+        } else {
+            Toast.makeText(getApplicationContext(), "Please Insert SIM Card.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -168,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -182,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     sendSMSMessage();
                 } else {
-                    Toast.makeText(this, "SMS Denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "SMS Denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
