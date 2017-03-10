@@ -23,6 +23,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
+
 public class MainActivity extends AppCompatActivity {
     public static final String SMS_SENT = "SMS_SENT";
     public static final String SMS_DELIVERED = "SMS_DELIVERED";
@@ -70,11 +74,31 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
+    protected void onStart() {
+        try {
+            registerReceiver(smsReceiver, new IntentFilter(SMS_SENT));
+            registerReceiver(smsReceiver, new IntentFilter(SMS_DELIVERED));
+        } catch (Exception e) {
+        }
+        super.onStart();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        pBar = new ProgressDialog(this);
+        try {
+            Tracker t = ((GAnalytics) getApplication()).getDefaultTracker();
+            t.setScreenName(this.getClass().getSimpleName());
+            t.send(new HitBuilders.ScreenViewBuilder().build());
+        } catch (Exception e) {
+        }
+        pBar = new ProgressDialog(MainActivity.this) {
+            @Override
+            public void onBackPressed() {
+                pBar.dismiss();
+            }
+        };
         pBar.setMessage("Sending SMS");
         pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pBar.setIndeterminate(true);
@@ -84,8 +108,9 @@ public class MainActivity extends AppCompatActivity {
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (txtRegN.getText().toString().replaceAll(" ", "").trim().length() >= 5)
+                if (txtRegN.getText().toString().replaceAll(" ", "").trim().length() >= 5) {
                     checkMessage();
+                }
                 else {
                     Toast.makeText(getApplicationContext(), "Please Enter Valid Number", Toast.LENGTH_LONG).show();
                     txtRegN.requestFocus();
@@ -118,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
             int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
             if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
-                return;
             } else {
                 sendSMSMessage();
             }
@@ -129,16 +153,14 @@ public class MainActivity extends AppCompatActivity {
 
     protected void sendSMSMessage() {
         phoneNo = "7738299899";
-        message = txtRegN.getText().toString().toUpperCase().replaceAll(" ", "").trim();
-        message = "VAHAN " + message;
+        message = txtRegN.getText().toString().replaceAll(" ", "").trim();
+        message = "Vahan " + message;
+
+        pBar.show();
+        pBar.setCancelable(false);
 
         PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SMS_SENT), 0);
         PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SMS_DELIVERED), 0);
-
-        registerReceiver(smsReceiver, new IntentFilter(SMS_SENT));
-        registerReceiver(smsReceiver, new IntentFilter(SMS_DELIVERED));
-
-        pBar.show();
 
         try {
             SmsManager smsManager = SmsManager.getDefault();
@@ -146,14 +168,12 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                unregisterReceiver(smsReceiver);
                 sendBtn.setEnabled(true);
             }
-        }, 25000);
+        }, 10000);
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -170,6 +190,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        unregisterReceiver(smsReceiver);
+        super.onStop();
+    }
+
+    @Override
     public void onBackPressed() {
         finish();
     }

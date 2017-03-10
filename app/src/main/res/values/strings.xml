@@ -3,7 +3,8 @@
     <string name="header">Vehicle Registration Certificate (RC) Information System</string>
     <string name="txtHint">Enter Vehicle Number</string>
     <string name="txtNote">Note\n This application uses SMS for getting vehicle information.</string>
-    <string name="txtFooter">Created in Public Interest by Shreyansh Mohnot\nmohnotshreyansh@gmail.com</string>
+    <string name="txtFooter">Created in Public Interest by Shreyansh Mohnot\n developershreyansh@gmail.com</string>
+    <string name="emailadd">developershreyansh@gmail.com</string>
     <string name="txtBtn">SEND</string>
     <string name="boxhint">eg. GJ05 SH 0005\nMH05 SH 0505</string>
     <string name="helptxt">This application provides quick and easy access of vehicle registration information
@@ -15,5 +16,5 @@
         \n\u2022 Tap on Send SMS.\n\u2022 Wait for 30-40 seconds.
         \n\u2022 You will receive an SMS containing information regarding the vehicle number.</string>
     <string name="ftxt">Thanks for using the application.
-        \nFor any query regarding this application please email me at mohnotshreyansh@gmail.com</string>
+        \nFor any query regarding this application please email me at developershreyansh@gmail.com</string>
 </resources>

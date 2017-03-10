@@ -1,83 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="40dp"
-        android:text="@string/header"
-        android:textAlignment="center"
-        android:textColor="@color/txtcolor"
-        android:textStyle="bold" />
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="15dp"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/txtRegN"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/round_button"
-            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 "
-            android:hint="@string/txtHint"
-            android:inputType="textCapCharacters|text"
-            android:maxLength="14"
-            android:padding="10dp"
+            android:layout_margin="40dp"
+            android:text="@string/header"
+            android:textAlignment="center"
             android:textColor="@color/txtcolor"
-            android:textColorHint="@color/txthint" />
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/txtRegN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/round_button"
+                android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                android:hint="@string/txtHint"
+                android:inputType="textVisiblePassword"
+                android:maxLength="12"
+                android:padding="10dp"
+                android:textColor="@color/txtcolor"
+                android:textColorHint="@color/txthint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:text="@string/boxhint"
+                android:textAlignment="center"
+                android:textColor="@color/txthint" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="#1A237E"
+            android:text="@string/txtBtn"
+            android:textAlignment="center"
+            android:textColor="@color/bgcolor" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="12dp"
             android:padding="10dp"
-            android:text="@string/boxhint"
+            android:text="@string/txtNote"
             android:textAlignment="center"
             android:textColor="@color/txthint" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="10dp"
+                android:text="@string/txtFooter"
+                android:textAlignment="center"
+                android:textColor="@color/txtcolor" />
+        </RelativeLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnSend"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:background="#1A237E"
-        android:text="@string/txtBtn"
-        android:textAlignment="center"
-        android:textColor="@color/bgcolor" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="12dp"
-        android:padding="10dp"
-        android:text="@string/txtNote"
-        android:textAlignment="center"
-        android:textColor="@color/txthint" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="10dp"
-            android:text="@string/txtFooter"
-            android:textAlignment="center"
-            android:textColor="@color/txtcolor" />
-    </RelativeLayout>
-</LinearLayout>
+</ScrollView>
