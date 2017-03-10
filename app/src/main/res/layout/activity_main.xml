@@ -38,7 +38,8 @@
                 android:maxLength="12"
                 android:padding="10dp"
                 android:textColor="@color/txtcolor"
-                android:textColorHint="@color/txthint" />
+                android:textColorHint="@color/txthint"
+                android:textCursorDrawable="@null" />
 
             <TextView
                 android:layout_width="wrap_content"

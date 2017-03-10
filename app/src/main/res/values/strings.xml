@@ -2,7 +2,7 @@
     <string name="app_name">Vehicle Search</string>
     <string name="header">Vehicle Registration Certificate (RC) Information System</string>
     <string name="txtHint">Enter Vehicle Number</string>
-    <string name="txtNote">Note\n This application uses SMS for getting vehicle information.</string>
+    <string name="txtNote">Note\n This application sends SMS to get vehicle information</string>
     <string name="txtFooter">Created in Public Interest by Shreyansh Mohnot\n developershreyansh@gmail.com</string>
     <string name="emailadd">developershreyansh@gmail.com</string>
     <string name="txtBtn">SEND</string>

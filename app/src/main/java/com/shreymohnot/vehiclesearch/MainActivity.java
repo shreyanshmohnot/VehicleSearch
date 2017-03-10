@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         if (telMgr.getSimState() != TelephonyManager.SIM_STATE_ABSENT) {
             checkMessage();
         } else {
-            Toast.makeText(getApplicationContext(), "Please Insert SIM Card.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Please Insert SIM Card", Toast.LENGTH_LONG).show();
         }
     }
 
