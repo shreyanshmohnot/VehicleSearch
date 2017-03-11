@@ -4,16 +4,14 @@
     <string name="txtHint">Enter Vehicle Number</string>
     <string name="txtNote">Note\n This application sends SMS to get vehicle information</string>
     <string name="txtFooter">Created in Public Interest by Shreyansh Mohnot\n developershreyansh@gmail.com</string>
-    <string name="emailadd">developershreyansh@gmail.com</string>
     <string name="txtBtn">SEND</string>
-    <string name="boxhint">eg. GJ05 SH 0005\nMH05 SH 0505</string>
+    <string name="boxhint">If the Vehicle number is GJ5 CR 3232 then enter \"GJ05CR3232\" and similar for all other states</string>
     <string name="helptxt">This application provides quick and easy access of vehicle registration information
         to the citizens of the country through Central Government Repository.
         The details sometimes are not updated due to in process of digitization of records.</string>
     <string name="htxt">Steps to Vehicle Search\n</string>
-    <string name="btxt">\u2022 Enter Vehicle Number(eg. MH05 SH 9000).
-        \nFor GJ numbers put 0 before district code(eg. GJ5 => GJ05).
-        \n\u2022 Tap on Send SMS.\n\u2022 Wait for 30-40 seconds.
+    <string name="btxt">\u2022 Enter Vehicle Number(eg. GJ05CR3232).
+        \n\u2022 Tap on Send SMS.\n\u2022 Wait for 20-30 seconds.
         \n\u2022 You will receive an SMS containing information regarding the vehicle number.</string>
     <string name="ftxt">Thanks for using the application.
         \nFor any query regarding this application please email me at developershreyansh@gmail.com</string>

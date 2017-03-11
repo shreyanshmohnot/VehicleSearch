@@ -49,13 +49,13 @@ public class MainActivity extends AppCompatActivity {
                         sendBtn.setEnabled(false);
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(context, "Generic failure cause", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Error sending sms\nGeneric failure", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(context, "Service is currently unavailable", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Error sending sms\nService currently unavailable", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(context, "Radio turned off", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Error sending sms\nPhone Radio off", Toast.LENGTH_SHORT).show();
                         break;
                 }
             } else {
@@ -198,8 +198,6 @@ public class MainActivity extends AppCompatActivity {
             case MY_PERMISSIONS_REQUEST_SEND_SMS:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     sendSMSMessage();
-                } else {
-                    Toast.makeText(getApplicationContext(), "SMS Denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
